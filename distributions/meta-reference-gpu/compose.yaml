@@ -1,7 +1,37 @@
 services:
+  chromadb:
+    image: chromadb/chroma:latest
+    network_mode: "host"
+    ports:
+      - "6000:6000"
+    volumes:
+      - ./chroma_vdb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    network_mode: "host"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./init-db.sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   llamastack:
     image: llamastack/distribution-meta-reference-gpu
     network_mode: "host"
+    depends_on:
+      - chromadb
     volumes:
       - ~/.llama:/root/.llama
       - ./run.yaml:/root/my-run.yaml
@@ -26,10 +56,13 @@ services:
             # reservation.
             capabilities: [gpu]
     runtime: nvidia
-    entrypoint: bash -c "python -m llama_stack.distribution.server.server --yaml_config /root/my-run.yaml"
+    entrypoint: bash -c "sleep 30; python -m llama_stack.distribution.server.server --yaml_config /root/my-run.yaml"
     deploy:
       restart_policy:
         condition: on-failure
         delay: 3s
         max_attempts: 5
         window: 60s
+
+volumes:
+  postgres_data:
