@@ -87,6 +87,7 @@ class ModelsRoutingTable(CommonRoutingTableImpl, Models):
         provider_id: str | None = None,
         metadata: dict[str, Any] | None = None,
         model_type: ModelType | None = None,
+        force_registration: bool = False,
     ) -> Model:
         if provider_id is None:
             # If provider_id not specified, use the only provider if it supports this model
@@ -121,7 +122,7 @@ class ModelsRoutingTable(CommonRoutingTableImpl, Models):
             model_type=model_type,
             source=RegistryEntrySource.via_register_api,
         )
-        registered_model = await self.register_object(model)
+        registered_model = await self.register_object(model, force_registration=force_registration)
         return registered_model
 
     async def unregister_model(self, model_id: str) -> None:

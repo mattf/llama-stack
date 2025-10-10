@@ -193,7 +193,9 @@ class CommonRoutingTableImpl(RoutingTable):
         await self.dist_registry.delete(obj.type, obj.identifier)
         await unregister_object_from_provider(obj, self.impls_by_provider_id[obj.provider_id])
 
-    async def register_object(self, obj: RoutableObjectWithProvider) -> RoutableObjectWithProvider:
+    async def register_object(
+        self, obj: RoutableObjectWithProvider, force_registration: bool = False
+    ) -> RoutableObjectWithProvider:
         # if provider_id is not specified, pick an arbitrary one from existing entries
         if not obj.provider_id and len(self.impls_by_provider_id) > 0:
             obj.provider_id = list(self.impls_by_provider_id.keys())[0]
@@ -211,7 +213,13 @@ class CommonRoutingTableImpl(RoutingTable):
             obj.owner = creator
             logger.info(f"Setting owner for {obj.type} '{obj.identifier}' to {obj.owner.principal}")
 
-        registered_obj = await register_object_with_provider(obj, p)
+        if force_registration:
+            # For config-initiated registration, skip adapter validation and directly register
+            # This allows registration to succeed even if the adapter would reject it
+            registered_obj = obj
+        else:
+            # For user-initiated registration, go through normal adapter validation
+            registered_obj = await register_object_with_provider(obj, p)
         # TODO: This needs to be fixed for all APIs once they return the registered object
         if obj.type == ResourceType.model.value:
             await self.dist_registry.register(registered_obj)

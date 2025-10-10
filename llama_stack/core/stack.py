@@ -119,7 +119,21 @@ async def register_resources(run_config: StackRunConfig, impls: dict[Api, Any]):
             # we want to maintain the type information in arguments to method.
             # instead of method(**obj.model_dump()), which may convert a typed attr to a dict,
             # we use model_dump() to find all the attrs and then getattr to get the still typed value.
-            await method(**{k: getattr(obj, k) for k in obj.model_dump().keys()})
+
+            # For config-initiated model registration, use force_registration to bypass
+            # adapter validation and ensure registration succeeds regardless of provider status
+            if register_method == "register_model":
+                await method(force_registration=True, **{k: getattr(obj, k) for k in obj.model_dump().keys()})
+            else:
+                try:
+                    await method(**{k: getattr(obj, k) for k in obj.model_dump().keys()})
+                except Exception as e:
+                    # Log registration failures during config-initiated startup as warnings
+                    # instead of allowing them to crash the entire stack startup.
+                    # This prevents provider errors from terminating the stack initialization process.
+                    logger.warning(
+                        f"Failed to register {rsrc.capitalize()} {getattr(obj, 'identifier', obj)} from configuration: {e}"
+                    )
 
         method = getattr(impls[api], list_method)
         response = await method()
