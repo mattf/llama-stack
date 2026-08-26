@@ -169,7 +169,7 @@ def create_router(impl: Messages) -> APIRouter:
 
         if isinstance(result, AsyncIterator):
             return StreamingResponse(
-                _preserve_context_for_sse(_anthropic_sse_generator(result)),
+                _anthropic_sse_generator(result),
                 media_type="text/event-stream",
                 headers=response_headers,
             )

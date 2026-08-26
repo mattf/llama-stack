@@ -156,7 +156,7 @@ def create_router(impl: Interactions) -> APIRouter:
             return result
         if isinstance(result, AsyncIterator):
             return StreamingResponse(
-                _preserve_context_for_sse(_google_sse_generator(cast(AsyncIterator[Any], result))),
+                _google_sse_generator(cast(AsyncIterator[Any], result)),
                 media_type="text/event-stream",
             )
 

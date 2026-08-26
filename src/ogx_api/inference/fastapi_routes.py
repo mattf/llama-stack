@@ -174,7 +174,7 @@ def create_router(impl: Inference) -> APIRouter:
         result = await impl.openai_chat_completion(params)
         if isinstance(result, AsyncIterator):
             return StreamingResponse(
-                _preserve_context_for_sse(_sse_generator(result, context="chat_completion")),
+                _sse_generator(result, context="chat_completion"),
                 media_type="text/event-stream",
             )
         return result
@@ -252,7 +252,7 @@ def create_router(impl: Inference) -> APIRouter:
         result = await impl.openai_completion(params)
         if isinstance(result, AsyncIterator):
             return StreamingResponse(
-                _preserve_context_for_sse(_sse_generator(result, context="completion")),
+                _sse_generator(result, context="completion"),
                 media_type="text/event-stream",
             )
         return result
