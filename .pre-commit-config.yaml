@@ -372,6 +372,7 @@ repos:
               exit 1
             fi
             exit 0
+          - --
 
 # markdownlint must run after distro-codegen and provider-codegen which generate markdown files
 -   repo: https://github.com/igorshubovych/markdownlint-cli
