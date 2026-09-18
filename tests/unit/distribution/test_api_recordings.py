@@ -429,6 +429,52 @@ class TestInferenceRecording:
                 # Verify the original method was NOT called
                 mock_create_patch.assert_not_called()
 
+    async def test_record_if_missing_model_list_goes_live(self, temp_storage_dir):
+        """Model lists are re-fetched live in record modes so newly pulled models are recorded."""
+        from openai.types.model import Model
+
+        def mock_list(model_ids):
+            def _make(*args, **kwargs):
+                async def _gen():
+                    for model_id in model_ids:
+                        yield Model(id=model_id, object="model", created=1, owned_by="test")
+
+                return _gen()
+
+            return _make
+
+        temp_storage_dir = temp_storage_dir / "test_record_if_missing_model_list"
+
+        # Record an initial model set
+        with patch(
+            "openai.resources.models.AsyncModels.list",
+            side_effect=mock_list(["model-a"]),
+        ):
+            with api_recording(mode=APIRecordingMode.RECORD, storage_dir=str(temp_storage_dir)):
+                client = AsyncOpenAI(base_url="http://localhost:11434/v1", api_key="test")
+                recorded = [m.id async for m in client.models.list()]
+        assert recorded == ["model-a"]
+
+        # A new model is now available: record-if-missing must not replay the stale
+        # recorded union, it must go live and record the updated set
+        with patch(
+            "openai.resources.models.AsyncModels.list",
+            side_effect=mock_list(["model-a", "model-b"]),
+        ) as mock:
+            with api_recording(mode=APIRecordingMode.RECORD_IF_MISSING, storage_dir=str(temp_storage_dir)):
+                client = AsyncOpenAI(base_url="http://localhost:11434/v1", api_key="test")
+                recorded = [m.id async for m in client.models.list()]
+        assert recorded == ["model-a", "model-b"]
+        assert mock.call_count == 1
+
+        # Replay still serves the union of all recorded model sets without going live
+        with patch("openai.resources.models.AsyncModels.list") as mock:
+            with api_recording(mode=APIRecordingMode.REPLAY, storage_dir=str(temp_storage_dir)):
+                client = AsyncOpenAI(base_url="http://localhost:11434/v1", api_key="test")
+                replayed = sorted([m.id async for m in client.models.list()])
+        assert replayed == ["model-a", "model-b"]
+        mock.assert_not_called()
+
     async def test_replay_missing_recording(self, temp_storage_dir):
         """Test that replay mode fails when no recording is found."""
         temp_storage_dir = temp_storage_dir / "test_replay_missing_recording"

@@ -1181,11 +1181,14 @@ async def _patched_inference_method(original_method, self, client_type, endpoint
     # Try to find existing recording for REPLAY or RECORD_IF_MISSING modes
     recording = None
     if mode == APIRecordingMode.REPLAY or mode == APIRecordingMode.RECORD_IF_MISSING:
-        # Special handling for model-list endpoints: merge all recordings with this hash
-        if _is_model_list_endpoint(endpoint):
+        # Model-list responses reflect which models are available in the current
+        # environment (e.g. which models were pulled), so only REPLAY may use the
+        # recorded union. In RECORD_IF_MISSING we must fetch live and re-record,
+        # otherwise a stale union would hide newly pulled models.
+        if _is_model_list_endpoint(endpoint) and mode == APIRecordingMode.REPLAY:
             records = storage._model_list_responses(request_hash)
             recording = _combine_model_list_responses(endpoint, records)
-        else:
+        elif not _is_model_list_endpoint(endpoint):
             recording = storage.find_recording(request_hash)
 
         if recording:
