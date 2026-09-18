@@ -15,6 +15,12 @@ updates:
     schedule:
       interval: "weekly"
       day: "saturday"
+    # Batch all weekly updates into a single PR so the merge queue only has
+    # one python-deps PR to chew through instead of one per package.
+    groups:
+      python-deps:
+        patterns:
+          - "*"
     labels:
       - type/dependencies
       - python
@@ -26,6 +32,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "saturday"
+    groups:
+      api-deps:
+        patterns:
+          - "*"
     labels:
       - type/dependencies
       - python
