@@ -17,7 +17,7 @@
         "__type__": "openai.types.model.Model",
         "__data__": {
           "id": "nomic-embed-text:v1.5",
-          "created": 1789759833,
+          "created": 1789760293,
           "object": "model",
           "owned_by": "library"
         }
@@ -26,7 +26,7 @@
         "__type__": "openai.types.model.Model",
         "__data__": {
           "id": "deepseek-r1:1.5b",
-          "created": 1789759829,
+          "created": 1789760290,
           "object": "model",
           "owned_by": "library"
         }
