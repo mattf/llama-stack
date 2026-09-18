@@ -80,7 +80,7 @@ dependencies = [
     "aiosqlite>=0.21.0",                              # server - for metadata store
     "asyncpg",                                        # for metadata store
     "sqlalchemy[asyncio]>=2.0.41",                    # server - for conversations
-    "mcp>=1.28.1,<2.0",                                # for connectors
+    "mcp>=1.28.1,<3.0",                                # for connectors
     "zstandard>=0.23.0",                              # server - zstd request decompression
     "models-dev>=1.0.398",
 ]
@@ -99,11 +99,11 @@ starter = [
     "datasets>=4.0.0",
     "docling-slim[service-client]>=2.117.0",  # Chunk output through the convert endpoint added in 2.117.0
     "einops",
-    "elasticsearch>=8.16.0,<9.0.0",
+    "elasticsearch>=8.16.0,<10.0.0",
     "emoji",
     "faiss-cpu",
     "fire",
-    "google-genai>=1.69.0,<2",
+    "google-genai>=1.69.0,<3",
     "langdetect",
     "markitdown[all]",
     "matplotlib",
@@ -153,16 +153,16 @@ dev = [
     "databricks-sdk>=0.114.0",
     "datasets>=4.0.0",
     "docling-slim[service-client]>=2.117.0",  # Chunk output through the convert endpoint added in 2.117.0
-    "elasticsearch>=8.16.0, <9.0.0",
+    "elasticsearch>=8.16.0,<10.0.0",
     "faiss-cpu",
     "fairscale",
-    "google-genai>=1.69.0,<2",
+    "google-genai>=1.69.0,<3",
     "langchain-core>=0.3.85",                            # CVE-2026-44843: insecure deserialization
     "langchain-openai>=1.2.2",
     "langgraph",
     "lm-format-enforcer",
     "markitdown[all]",
-    "mcp>=1.28.1,<2.0",
+    "mcp>=1.28.1,<3.0",
     "milvus-lite>=2.5.0; platform_machine == 'x86_64' or platform_machine == 'aarch64' or platform_machine == 'arm64'",
     "moto[s3]>=5.1.10",
     "nest-asyncio",
