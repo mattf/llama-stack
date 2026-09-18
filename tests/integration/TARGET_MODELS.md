@@ -46,10 +46,10 @@ Cron: `1 0 * * 0`
 | `fireworks` | fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b | — | fireworks/accounts/fireworks/models/qwen3-embedding-8b | — | `base` | — |
 | `gemini` | gemini/gemini-2.5-flash-lite | — | gemini/text-embedding-004 | — | `interactions` | — |
 | `gpt` | openai/gpt-4o | openai/gpt-4o | openai/text-embedding-3-small | — | `responses`, `messages-openai` | — |
-| `gpt-reasoning` | openai/o4-mini | — | — | — | `gpt-reasoning` | — |
+| `gpt-reasoning` | openai/o4-mini | — | openai/text-embedding-3-small | — | `gpt-reasoning` | — |
 | `ollama` | ollama/llama3.2:3b-instruct-fp16 | — | ollama/nomic-embed-text:v1.5 | — | `base`, `messages` | — |
-| `ollama-postgres` | ollama/llama3.2:3b-instruct-fp16 | — | sentence-transformers/nomic-embed-text-v1.5 | — | `base` | — |
-| `ollama-reasoning` | ollama/deepseek-r1:1.5b | — | — | — | `ollama-reasoning` | — |
+| `ollama-postgres` | ollama/llama3.2:3b-instruct-fp16 | — | ollama/nomic-embed-text:v1.5 | — | `base` | — |
+| `ollama-reasoning` | ollama/deepseek-r1:1.5b | — | ollama/nomic-embed-text:v1.5 | — | `ollama-reasoning` | — |
 | `ollama-vision` | — | ollama/llama3.2-vision:11b | ollama/nomic-embed-text:v1.5 | — | `vision` | — |
 | `vertexai` | vertexai/publishers/google/models/gemini-2.0-flash | vertexai/publishers/google/models/gemini-2.0-flash | sentence-transformers/nomic-ai/nomic-embed-text-v1.5 | — | `responses` | — |
 | `vllm` | vllm/Qwen/Qwen3-0.6B | — | sentence-transformers/nomic-embed-text-v1.5 | — | `base-vllm-subset`, `vllm-reasoning` | `base` |

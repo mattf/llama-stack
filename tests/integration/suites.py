@@ -82,7 +82,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         },
         defaults={
             "text_model": "ollama/llama3.2:3b-instruct-fp16",
-            "embedding_model": "sentence-transformers/nomic-embed-text-v1.5",
+            "embedding_model": "ollama/nomic-embed-text:v1.5",
         },
     ),
     "vllm": Setup(
@@ -115,6 +115,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         },
         defaults={
             "text_model": "ollama/deepseek-r1:1.5b",
+            "embedding_model": "ollama/nomic-embed-text:v1.5",
         },
     ),
     "bedrock": Setup(
@@ -145,6 +146,8 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         description="OpenAI reasoning models (o4-mini) for reasoning effort tests",
         defaults={
             "text_model": "openai/o4-mini",
+            "embedding_model": "openai/text-embedding-3-small",
+            "embedding_dimension": 1536,
         },
     ),
     "azure": Setup(
