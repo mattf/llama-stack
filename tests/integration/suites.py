@@ -137,7 +137,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         defaults={
             "text_model": "openai/gpt-4o",
             "vision_model": "openai/gpt-4o",
-            "embedding_model": "openai/text-embedding-3-small",
+            "embedding_model": "sentence-transformers/nomic-ai/nomic-embed-text-v1.5",
             "embedding_dimension": 1536,
         },
     ),
@@ -165,6 +165,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         description="IBM WatsonX AI models",
         defaults={
             "text_model": "watsonx/meta-llama/llama-3-3-70b-instruct",
+            "embedding_model": "sentence-transformers/nomic-ai/nomic-embed-text-v1.5",
         },
     ),
     "vertexai": Setup(
@@ -216,7 +217,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         # Least expensive text model at https://docs.fireworks.ai/serverless/pricing
         defaults={
             "text_model": "fireworks/accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
-            "embedding_model": "fireworks/accounts/fireworks/models/qwen3-embedding-8b",
+            "embedding_model": "sentence-transformers/nomic-ai/nomic-embed-text-v1.5",
         },
     ),
     "anthropic": Setup(
