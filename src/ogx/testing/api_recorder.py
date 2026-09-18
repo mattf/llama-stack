@@ -407,8 +407,9 @@ def _normalize_response(data: dict[str, Any], request_hash: str) -> dict[str, An
         data["id"] = f"rec-{request_hash[:12]}"
 
     # Normalize timestamp to epoch (0) (for OpenAI-style responses)
-    # But not for model objects where created timestamp might be meaningful
-    if "created" in data and data.get("object") != "model":
+    # Model objects included: for providers like Ollama, "created" is the model
+    # file's mtime in an ephemeral container, so it changes on every record run.
+    if "created" in data:
         data["created"] = 0
 
     # Normalize Ollama-specific timestamp fields

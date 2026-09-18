@@ -475,6 +475,45 @@ class TestInferenceRecording:
         assert replayed == ["model-a", "model-b"]
         mock.assert_not_called()
 
+    async def test_model_list_created_timestamp_normalized(self, temp_storage_dir):
+        """Model-list recordings are stable across re-records with different live timestamps.
+
+        Providers like Ollama derive "created" from the model file's mtime in an
+        ephemeral container, so a fresh record run must not produce a new diff
+        for an unchanged model set (which would re-trigger CI recording runs).
+        """
+        from openai.types.model import Model
+
+        def mock_list(created):
+            def _make(*args, **kwargs):
+                async def _gen():
+                    yield Model(id="model-a", object="model", created=created, owned_by="test")
+
+                return _gen()
+
+            return _make
+
+        temp_storage_dir = temp_storage_dir / "test_model_list_created_normalized"
+
+        async def record_with(created):
+            with patch("openai.resources.models.AsyncModels.list", side_effect=mock_list(created)):
+                with api_recording(mode=APIRecordingMode.RECORD, storage_dir=str(temp_storage_dir)):
+                    client = AsyncOpenAI(base_url="http://localhost:11434/v1", api_key="test")
+                    return [m.id async for m in client.models.list()]
+
+        assert await record_with(1789759342) == ["model-a"]
+        first = sorted(temp_storage_dir.glob("**/models-*.json"))
+        assert len(first) == 1
+        body = json.loads(first[0].read_text())["response"]["body"]
+        created_values = [m["__data__"]["created"] for m in body]
+        assert created_values == [0]
+
+        # A fresh "container" reports a different mtime; the stored file must be unchanged
+        assert await record_with(1789760000) == ["model-a"]
+        second = sorted(temp_storage_dir.glob("**/models-*.json"))
+        assert len(second) == 1
+        assert second[0].read_text() == first[0].read_text()
+
     async def test_replay_missing_recording(self, temp_storage_dir):
         """Test that replay mode fails when no recording is found."""
         temp_storage_dir = temp_storage_dir / "test_replay_missing_recording"

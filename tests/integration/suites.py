@@ -93,7 +93,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         },
         defaults={
             "text_model": "vllm/Qwen/Qwen3-0.6B",
-            "embedding_model": "sentence-transformers/nomic-embed-text-v1.5",
+            "embedding_model": "sentence-transformers/nomic-ai/nomic-embed-text-v1.5",
             "rerank_model": "vllm/Qwen/Qwen3-Reranker-0.6B",
         },
     ),
@@ -257,7 +257,7 @@ SETUP_DEFINITIONS: dict[str, Setup] = {
         },
         defaults={
             "text_model": "llama-cpp-server/qwen2.5",
-            "embedding_model": "sentence-transformers/nomic-embed-text-v1.5",
+            "embedding_model": "sentence-transformers/nomic-ai/nomic-embed-text-v1.5",
         },
     ),
     "vllm-qwen3next": Setup(
