@@ -59,7 +59,7 @@
               "function_call": null,
               "tool_calls": [
                 {
-                  "id": "chatcmpl-tool-a3c8f8a9e9decc4e",
+                  "id": "chatcmpl-tool-9f7a598d51fdc0ec",
                   "function": {
                     "arguments": "{\"location\": \"San Francisco\"}",
                     "name": "get_weather"
@@ -69,7 +69,7 @@
                   "name": null
                 }
               ],
-              "reasoning_content": "The user asks: \"What's the weather in San Francisco?\" We need to retrieve weather using the get_weather function. We'll call it with location \"San Francisco\".",
+              "reasoning_content": "We need to call the function get_weather with location: \"San Francisco\".",
               "tools": null
             }
           }
@@ -81,9 +81,9 @@
         "service_tier": null,
         "system_fingerprint": null,
         "usage": {
-          "completion_tokens": 62,
+          "completion_tokens": 43,
           "prompt_tokens": 283,
-          "total_tokens": 345,
+          "total_tokens": 326,
           "completion_tokens_details": null,
           "prompt_tokens_details": {
             "audio_tokens": null,
