@@ -71,6 +71,9 @@ def messages_client(messages_base_url):
 #   - vllm (Qwen3-0.6B): thinks by default in a typical deployment; keep the
 #     deployment standard and just raise max_tokens so text follows the
 #     thinking blocks.
+#   - ollama (qwen3.5:0.8b): hybrid-thinking model that thinks by default,
+#     like vllm's Qwen3-0.6B; keep the deployment standard and just raise
+#     max_tokens so text follows the thinking blocks.
 #   - gpt (gpt-5-nano): OpenAI reasoning models charge reasoning tokens
 #     against max_tokens (translated to max_completion_tokens), so a small
 #     explicit budget is exhausted before any text is emitted; raise
@@ -78,7 +81,7 @@ def messages_client(messages_base_url):
 # Other providers default to non-thinking models.
 _THINKING_DISABLED_SETUPS = frozenset({"fireworks"})
 _THINKING_BUDGET_SETUPS = frozenset({"meta"})
-_THINKING_FLOOR_SETUPS = frozenset({"meta", "vllm", "gpt"})
+_THINKING_FLOOR_SETUPS = frozenset({"meta", "vllm", "gpt", "ollama", "ollama-postgres"})
 _THINKING_BUDGET_TOKENS = 1024
 _THINKING_MAX_TOKENS = 2048
 
